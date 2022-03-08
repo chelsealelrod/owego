@@ -1,7 +1,9 @@
 from django.db import models
 from .category import Category
 from .note import Note
-import django.db.models.deletion import CASCADE
+from django.db.models.deletion import CASCADE
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 
 class Bill (models.model):

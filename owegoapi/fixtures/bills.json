@@ -1,0 +1,15 @@
+[
+    {
+    "model": "owegoapi.bill",
+    "pk": 1,
+    "fields":{
+        "user": 1,
+        "note": 1,
+        "title": "Verizon Cell Phone",
+        "category": 1,
+        "due_date": "",
+        "amount_due": "",
+        "paid": "False"
+    }
+}
+]
