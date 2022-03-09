@@ -1,0 +1,9 @@
+[
+    {
+    "model": "owegoapi.tag",
+    "pk": 1,
+    "fields":{
+        "label": "credit cards"
+    }
+}
+]

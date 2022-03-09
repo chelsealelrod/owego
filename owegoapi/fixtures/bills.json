@@ -3,12 +3,11 @@
     "model": "owegoapi.bill",
     "pk": 1,
     "fields":{
-        "user": 1,
         "note": 1,
-        "title": "Verizon Cell Phone",
+        "title": "Cell Phone",
         "category": 1,
-        "due_date": "",
-        "amount_due": "",
+        "due_date": "2022-03-08",
+        "amount_due": "102.90",
         "paid": "False"
     }
 }
