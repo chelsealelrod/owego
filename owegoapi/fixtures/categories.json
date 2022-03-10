@@ -1,0 +1,11 @@
+[
+    {
+        "model": "owegoapi.category",
+        "pk": 1,
+        "fields": {
+            "label": "Credit Card"
+        }
+
+
+}
+]

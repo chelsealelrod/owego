@@ -15,13 +15,3 @@ pylint-django = "*"
 
 [requires]
 python_version = "3.9"
-
-echo '[FORMAT]
-good-names=i,j,ex,pk
-
-[MESSAGES CONTROL]
-disable=broad-except
-
-[MASTER]
-disable=C0114,
-' > .pylintrc

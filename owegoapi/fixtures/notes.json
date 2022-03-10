@@ -1,0 +1,12 @@
+[
+    {
+        "model": "owegoapi.note",
+        "pk": 1,
+        "fields": {
+            "text": "Phone bill is due same time as rent",
+            "date": "2022-03-08"
+        }
+
+
+}
+]

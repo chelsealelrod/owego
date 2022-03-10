@@ -1,4 +1,4 @@
 from django.db import models
 
-class Category(models.model):
+class Category(models.Model):
     label = models.CharField(max_length=50)

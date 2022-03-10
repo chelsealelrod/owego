@@ -5,6 +5,14 @@
     "python.linting.pylintArgs": [
         "--load-plugins=pylint_django",
         "--django-settings-module=owego.settings"
+    ],
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "driver": "SQLite",
+            "name": "owego-django",
+            "database": "db.sqlite3"
+        }
     ]
 }
 
