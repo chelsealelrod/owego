@@ -6,6 +6,8 @@ from django.db.models.deletion import CASCADE
 
 class Bill (models.Model):
     
+    owegouser = models.ForeignKey("owegoapi.owegouser",
+            on_delete=models.CASCADE, null=True)
     note = models.ForeignKey(Note,
                              on_delete=CASCADE,
                              related_name='tags')
