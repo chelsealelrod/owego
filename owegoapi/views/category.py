@@ -63,8 +63,8 @@ class CategoryView(ViewSet):
 
         category.label = request.data["label"]
 
-        category = Category.objects.get(pk=request.data["category_id"])
-        category.category = category
+        # category = Category.objects.get(pk=request.data["category"])
+        # category.category = category
 
         try:
             category.save()

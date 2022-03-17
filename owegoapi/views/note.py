@@ -6,7 +6,7 @@ from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers
 from rest_framework import status
-from owegoapi.models import Note,Owegouser,Tag
+from owegoapi.models import Note,Owegouser,Tag, Bill
 
 class NoteView(ViewSet):
     """Note posts"""
@@ -15,6 +15,9 @@ class NoteView(ViewSet):
 
         # Get all game records from the database
         notes = Note.objects.all() 
+        
+        bill = self.request.query_params.get('bill_id', None)
+        notes = notes.filter(bill__id=bill)
 
 
         serializer = NoteSerializer(

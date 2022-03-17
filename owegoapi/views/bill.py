@@ -66,11 +66,10 @@ class BillView(ViewSet):
         bill = Bill()
         bill.owegouser = owegouser
         bill.title = request.data["title"]
-        category = request.data["category"]
-        bill.note = request.data["note"]
+        category = request.data["categoryId"]
         bill.due_date = request.data["dueDate"]
         bill.amount_due = request.data["amountDue"]
-        bill.paid = False
+        bill.paid = request.data["paid"]
     
         category = Category.objects.get(pk=request.data["categoryId"])
         bill.category = category
@@ -98,8 +97,7 @@ class BillView(ViewSet):
         bill = Bill.objects.get(pk=pk)
         bill.owegouser = owegouser
         bill.title = request.data["title"]
-        bill.category = request.data["category"]
-        bill.note = request.data["note"]
+        bill.category = request.data["categoryId"]
         bill.due_date = request.data["dueDate"]
         bill.amount_due = request.data["amountDue"]
         bill.paid = False
@@ -139,6 +137,21 @@ class BillSerializer(serializers.ModelSerializer):
     """
     class Meta:
         model = Bill
-        fields = ('id','title', 'note', 'due_date', 'amount_due',
+        fields = ('id','title', 'due_date', 'amount_due',
                   'category', 'owegouser', 'paid')
         depth = 1
+        
+class BillUserSerializer(serializers.ModelSerializer):
+    """JSON serializer for event organizer's related Django user"""
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'email']
+        
+        
+class BillOwegoUserSerializer(serializers.ModelSerializer):
+    """JSON serializer for event organizer"""
+    user = BillUserSerializer(many=False)
+
+    class Meta:
+        model = Owegouser
+        fields = ['user']
