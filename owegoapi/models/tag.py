@@ -1,7 +1,7 @@
 from django.db import models
-from .note import Note
+from .bill import Bill
 
 class Tag (models.Model):
     
   label = models.CharField(max_length=50)
-  note_tag = models.ManyToManyField(Note)
+  bill_tag = models.ManyToManyField(Bill)

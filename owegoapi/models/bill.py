@@ -1,14 +1,11 @@
 from django.db import models
 from .category import Category
-from .note import Note
 from django.db.models.deletion import CASCADE
 
 
 class Bill (models.Model):
-    
-    note = models.ForeignKey(Note,
-                             on_delete=CASCADE,
-                             related_name='tags')
+    owegouser = models.ForeignKey("owegoapi.owegouser",
+            on_delete=models.CASCADE, null=True)
     title = models.CharField(max_length=50)
     category = models.ForeignKey(Category, on_delete=CASCADE,
                                  related_name='category')

@@ -6,27 +6,33 @@ from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers
 from rest_framework import status
-from owegoapi.models import Bill, Category
+from owegoapi.models import Bill, Category, Owegouser
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 class BillView(ViewSet):
     """Bill posts"""
 
     def list(self, request):
+        """Handle GET requests to bills resource
 
-        # Get all game records from the database
-        bills = Bill.objects.all() 
+        Returns:
+            Response -- JSON serialized list of bills
+        """
+        # Get all bill records from the database
+        bills = Bill.objects.all()
 
-        # Support filtering posts by category
-        #    http://localhost:8000/bills?category=1
+        # Support filtering bills by type
+        #    http://localhost:8000/bills?type=1
         #
-        # That URL will retrieve all tabletop posts
-        category_num = self.request.query_params.get('category', None)
-        if category_num is not None:
-            bills = bills.filter(category__id=category_num)
+        # That URL will retrieve all tabletop games
+        bill_type = self.request.query_params.get('type', None)
+        if bill_type is not None:
+            bills = bills.filter(bill_type__id=bill_type)
 
         serializer = BillSerializer(
             bills, many=True, context={'request': request})
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
     
     def retrieve(self, request, pk=None):
         """Handle GET requests for single bill
@@ -53,18 +59,17 @@ class BillView(ViewSet):
         """
 
         # Uses the token passed in the `Authorization` header
-        User = User.objects.get(user=request.auth.user)
-        #category = Category.objects.get(pk=request.data["categoryId"])
+        owegouser = Owegouser.objects.get(user=request.auth.user)
         # Create a new Python instance of the Post class
         # and set its properties from what was sent in the
         # body of the request from the client.
         bill = Bill()
+        bill.owegouser = owegouser
         bill.title = request.data["title"]
-        category = request.data["category"]
-        bill.note = request.data["note"]
+        category = request.data["categoryId"]
         bill.due_date = request.data["dueDate"]
         bill.amount_due = request.data["amountDue"]
-        bill.paid = False
+        bill.paid = request.data["paid"]
     
         category = Category.objects.get(pk=request.data["categoryId"])
         bill.category = category
@@ -78,7 +83,51 @@ class BillView(ViewSet):
             return Response({"reason": ex.message}, status=status.HTTP_400_BAD_REQUEST)
        
    
+    def update(self, request, pk=None):
+        """Handle PUT requests for a bill
 
+        Returns:
+            Response -- Empty body with 204 status code
+        """
+        owegouser = Owegouser.objects.get(user=request.auth.user)
+
+        # Do mostly the same thing as POST, but instead of
+        # creating a new instance of Game, get the game record
+        # from the database whose primary key is `pk`
+        bill = Bill.objects.get(pk=pk)
+        bill.owegouser = owegouser
+        bill.title = request.data["title"]
+        bill.category = request.data["categoryId"]
+        bill.due_date = request.data["dueDate"]
+        bill.amount_due = request.data["amountDue"]
+        bill.paid = False
+        
+        category = Category.objects.get(pk=request.data["categoryId"])
+        bill.category = category
+        
+        bill.save()
+
+        # 204 status code means everything worked but the
+        # server is not sending back any data in the response
+        return Response({}, status=status.HTTP_204_NO_CONTENT)
+    
+    def destroy(self, request, pk=None):
+        """Handle DELETE requests for a single bill
+
+        Returns:
+            Response -- 200, 404, or 500 status code
+        """
+        try:
+            bill = Bill.objects.get(pk=pk)
+            bill.delete()
+
+            return Response({}, status=status.HTTP_204_NO_CONTENT)
+
+        except Bill.DoesNotExist as ex:
+            return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
+
+        except Exception as ex:
+            return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class BillSerializer(serializers.ModelSerializer):
     """JSON serializer for posts
@@ -88,6 +137,21 @@ class BillSerializer(serializers.ModelSerializer):
     """
     class Meta:
         model = Bill
-        fields = ('id', 'user', 'title', 'note', 'due_date', 'amount_due',
-                  'category','paid')
+        fields = ('id','title', 'due_date', 'amount_due',
+                  'category', 'owegouser', 'paid')
         depth = 1
+        
+class BillUserSerializer(serializers.ModelSerializer):
+    """JSON serializer for event organizer's related Django user"""
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'email']
+        
+        
+class BillOwegoUserSerializer(serializers.ModelSerializer):
+    """JSON serializer for event organizer"""
+    user = BillUserSerializer(many=False)
+
+    class Meta:
+        model = Owegouser
+        fields = ['user']

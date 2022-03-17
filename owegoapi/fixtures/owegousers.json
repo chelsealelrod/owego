@@ -1,0 +1,9 @@
+[
+    {
+      "model": "owegoapi.owegouser",
+      "pk": 1,
+      "fields": {
+        "user": 2
+      }
+    }
+  ]
