@@ -59,8 +59,6 @@ class NoteView(ViewSet):
         note.text = request.data["text"]
         note.date = request.data["date"]
     
-        tag = Tag.objects.get(pk=request.data["tagId"])
-        note.tag = tag
 
         try:
             note.save()

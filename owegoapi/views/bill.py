@@ -100,7 +100,7 @@ class BillView(ViewSet):
         bill.category = request.data["categoryId"]
         bill.due_date = request.data["dueDate"]
         bill.amount_due = request.data["amountDue"]
-        bill.paid = False
+        bill.paid = request.data["paid"]
         
         category = Category.objects.get(pk=request.data["categoryId"])
         bill.category = category
