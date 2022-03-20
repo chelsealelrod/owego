@@ -7,6 +7,8 @@ from rest_framework.response import Response
 from rest_framework import serializers
 from rest_framework import status
 from owegoapi.models import Note,Owegouser,Tag, Bill
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 class NoteView(ViewSet):
     """Note posts"""
@@ -50,6 +52,7 @@ class NoteView(ViewSet):
 
         # Uses the token passed in the `Authorization` header
         owegouser = Owegouser.objects.get(user=request.auth.user)
+        bill = Bill.objects.get(pk=request.data["billId"])
         #category = Category.objects.get(pk=request.data["categoryId"])
         # Create a new Python instance of the Post class
         # and set its properties from what was sent in the
@@ -58,6 +61,7 @@ class NoteView(ViewSet):
         note.owegouser = owegouser
         note.text = request.data["text"]
         note.date = request.data["date"]
+        note.bill = bill
     
 
         try:
@@ -120,3 +124,17 @@ class NoteSerializer(serializers.ModelSerializer):
         model = Note
         fields = ('id', 'text', 'date')
         depth = 1
+        
+class NoteUserSerializer(serializers.ModelSerializer):
+    """JSON serializer for event organizer's related Django user"""
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'email']
+        
+class NoteOwegoUserSerializer(serializers.ModelSerializer):
+    """JSON serializer for event organizer"""
+    user = NoteUserSerializer(many=False)
+
+    class Meta:
+        model = Owegouser
+        fields = ['user']

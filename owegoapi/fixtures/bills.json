@@ -3,12 +3,12 @@
     "model": "owegoapi.bill",
     "pk": 1,
     "fields":{
-        "note": 1,
         "title": "Cell Phone",
         "category": 1,
         "due_date": "2022-03-08",
         "amount_due": "102.90",
-        "paid": "False"
+        "paid": false,
+        "bill_tag": [1]
     }
 }
 ]

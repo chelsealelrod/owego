@@ -6,7 +6,7 @@ from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers
 from rest_framework import status
-from owegoapi.models import Bill, Category, Owegouser
+from owegoapi.models import Bill, Category, Owegouser, Tag
 from django.contrib.auth import get_user_model
 User = get_user_model()
 
@@ -60,22 +60,22 @@ class BillView(ViewSet):
 
         # Uses the token passed in the `Authorization` header
         owegouser = Owegouser.objects.get(user=request.auth.user)
+        category = Category.objects.get(pk=request.data["categoryId"])
         # Create a new Python instance of the Post class
         # and set its properties from what was sent in the
         # body of the request from the client.
         bill = Bill()
         bill.owegouser = owegouser
         bill.title = request.data["title"]
-        category = request.data["categoryId"]
+        bill.category = category
         bill.due_date = request.data["dueDate"]
         bill.amount_due = request.data["amountDue"]
         bill.paid = request.data["paid"]
-    
-        category = Category.objects.get(pk=request.data["categoryId"])
-        bill.category = category
-
+        # bill_tag = Tag.objects.get(pk=request.data["billTagId"])
+        
         try:
             bill.save()
+            # bill.bill_tag.add(bill_tag)
             serializer = BillSerializer(bill, context={'request': request})
             return Response(serializer.data)
 
@@ -97,14 +97,12 @@ class BillView(ViewSet):
         bill = Bill.objects.get(pk=pk)
         bill.owegouser = owegouser
         bill.title = request.data["title"]
-        bill.category = request.data["categoryId"]
         bill.due_date = request.data["dueDate"]
         bill.amount_due = request.data["amountDue"]
         bill.paid = request.data["paid"]
         
         category = Category.objects.get(pk=request.data["categoryId"])
         bill.category = category
-        
         bill.save()
 
         # 204 status code means everything worked but the
@@ -140,6 +138,12 @@ class BillSerializer(serializers.ModelSerializer):
         fields = ('id','title', 'due_date', 'amount_due',
                   'category', 'owegouser', 'paid')
         depth = 1
+        
+# class BillTagSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Tag
+#         fields = ('id', 'label')
+   
         
 class BillUserSerializer(serializers.ModelSerializer):
     """JSON serializer for event organizer's related Django user"""
