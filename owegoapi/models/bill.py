@@ -1,7 +1,7 @@
 from django.db import models
 from .category import Category
 from django.db.models.deletion import CASCADE
-from .tag import Tag
+from .billTag import BillTag
 
 
 
@@ -14,5 +14,5 @@ class Bill(models.Model):
     due_date = models.DateField()
     amount_due = models.CharField(max_length=50)
     paid = models.BooleanField(default=False)
-    bill_tag = models.ManyToManyField(Tag, related_name="tags")
+    bill_tag = models.ManyToManyField(BillTag, related_name="tags")
     

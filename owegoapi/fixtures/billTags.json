@@ -1,0 +1,17 @@
+[
+    {
+    "model": "owegoapi.billTag",
+    "pk": 1,
+    "fields":{
+        "tag": 1
+    }
+},
+
+{
+    "model": "owegoapi.billTag",
+    "pk": 2,
+    "fields":{
+        "tag": 2
+    }
+}
+]

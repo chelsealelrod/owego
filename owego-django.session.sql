@@ -11,7 +11,7 @@ SELECT * FROM owegoapi_bill
 SELECT * FROM owegoapi_category
 
 SELECT * FROM owegoapi_tag
-
 SELECT * FROM owegoapi_note
+
 
 UPDATE owegoapi_note SET bill_id = 2 WHERE id=1

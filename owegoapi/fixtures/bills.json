@@ -8,7 +8,7 @@
         "due_date": "2022-03-08",
         "amount_due": "102.90",
         "paid": false,
-        "bill_tag": [1]
+        "bill_tag": [1,2]
     }
 }
 ]

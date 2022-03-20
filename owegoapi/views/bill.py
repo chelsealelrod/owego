@@ -71,11 +71,11 @@ class BillView(ViewSet):
         bill.due_date = request.data["dueDate"]
         bill.amount_due = request.data["amountDue"]
         bill.paid = request.data["paid"]
-        # bill_tag = Tag.objects.get(pk=request.data["billTagId"])
+        bill_tag = Tag.objects.get(pk=request.data["billTagId"])
         
         try:
             bill.save()
-            # bill.bill_tag.add(bill_tag)
+            bill.bill_tag.add(bill_tag)
             serializer = BillSerializer(bill, context={'request': request})
             return Response(serializer.data)
 
@@ -127,23 +127,25 @@ class BillView(ViewSet):
         except Exception as ex:
             return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-class BillSerializer(serializers.ModelSerializer):
-    """JSON serializer for posts
-
-    Arguments:
-        serializer type
-    """
+        
+class TagSerializer(serializers.ModelSerializer):
     class Meta:
+        model = Tag
+        fields = ('id', 'label')
+        
+class BillTagSerializer(serializers.ModelSerializer):
+    tag = TagSerializer(many=False)
+    class Meta:
+        model = Tag
+        fields = ('id', 'tag')
+   
+class BillSerializer(serializers.ModelSerializer):
+     bill_tag = BillTagSerializer(many=True)
+     class Meta:
         model = Bill
         fields = ('id','title', 'due_date', 'amount_due',
-                  'category', 'owegouser', 'paid')
+                  'category', 'owegouser', 'paid', 'bill_tag','notes')
         depth = 1
-        
-# class BillTagSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Tag
-#         fields = ('id', 'label')
-   
         
 class BillUserSerializer(serializers.ModelSerializer):
     """JSON serializer for event organizer's related Django user"""

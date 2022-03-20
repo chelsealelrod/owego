@@ -79,12 +79,10 @@ class NoteView(ViewSet):
             Response -- Empty body with 204 status code
         """
         owegouser = Owegouser.objects.get(user=request.auth.user)
-        tag = Tag.objects.get(pk=request.data["tagId"])
         # Do mostly the same thing as POST, but instead of
         # creating a new instance of Post, get the game record
         # from the database whose primary key is `pk`
         note = Note.objects.get(pk=pk)
-        note.tag = tag
         note.owegouser = owegouser
         note.text = request.data["text"]
         note.date = request.data["date"]
@@ -124,6 +122,21 @@ class NoteSerializer(serializers.ModelSerializer):
         model = Note
         fields = ('id', 'text', 'date')
         depth = 1
+        
+class BillNoteSerializer(serializers.ModelSerializer):
+    note = NoteSerializer(many=False)
+    class Meta:
+        model = Note
+        fields = ('id', 'note')
+        
+class BillSerializer(serializers.ModelSerializer):
+     bill_tag = BillNoteSerializer(many=True)
+     class Meta:
+        model = Bill
+        fields = ('id','title', 'due_date', 'amount_due',
+                  'category', 'owegouser', 'paid', 'bill_tag')
+        depth = 1
+        
         
 class NoteUserSerializer(serializers.ModelSerializer):
     """JSON serializer for event organizer's related Django user"""
