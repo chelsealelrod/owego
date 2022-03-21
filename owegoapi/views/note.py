@@ -7,6 +7,8 @@ from rest_framework.response import Response
 from rest_framework import serializers
 from rest_framework import status
 from owegoapi.models import Note,Owegouser,Tag, Bill
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 class NoteView(ViewSet):
     """Note posts"""
@@ -50,6 +52,7 @@ class NoteView(ViewSet):
 
         # Uses the token passed in the `Authorization` header
         owegouser = Owegouser.objects.get(user=request.auth.user)
+        bill = Bill.objects.get(pk=request.data["billId"])
         #category = Category.objects.get(pk=request.data["categoryId"])
         # Create a new Python instance of the Post class
         # and set its properties from what was sent in the
@@ -58,9 +61,8 @@ class NoteView(ViewSet):
         note.owegouser = owegouser
         note.text = request.data["text"]
         note.date = request.data["date"]
+        note.bill = bill
     
-        tag = Tag.objects.get(pk=request.data["tagId"])
-        note.tag = tag
 
         try:
             note.save()
@@ -77,12 +79,10 @@ class NoteView(ViewSet):
             Response -- Empty body with 204 status code
         """
         owegouser = Owegouser.objects.get(user=request.auth.user)
-        tag = Tag.objects.get(pk=request.data["tagId"])
         # Do mostly the same thing as POST, but instead of
         # creating a new instance of Post, get the game record
         # from the database whose primary key is `pk`
         note = Note.objects.get(pk=pk)
-        note.tag = tag
         note.owegouser = owegouser
         note.text = request.data["text"]
         note.date = request.data["date"]
@@ -122,3 +122,32 @@ class NoteSerializer(serializers.ModelSerializer):
         model = Note
         fields = ('id', 'text', 'date')
         depth = 1
+        
+class BillNoteSerializer(serializers.ModelSerializer):
+    note = NoteSerializer(many=False)
+    class Meta:
+        model = Note
+        fields = ('id', 'note')
+        
+class BillSerializer(serializers.ModelSerializer):
+     bill_tag = BillNoteSerializer(many=True)
+     class Meta:
+        model = Bill
+        fields = ('id','title', 'due_date', 'amount_due',
+                  'category', 'owegouser', 'paid', 'bill_tag')
+        depth = 1
+        
+        
+class NoteUserSerializer(serializers.ModelSerializer):
+    """JSON serializer for event organizer's related Django user"""
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'email']
+        
+class NoteOwegoUserSerializer(serializers.ModelSerializer):
+    """JSON serializer for event organizer"""
+    user = NoteUserSerializer(many=False)
+
+    class Meta:
+        model = Owegouser
+        fields = ['user']

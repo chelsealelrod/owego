@@ -8,7 +8,9 @@ from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers
 from rest_framework import status
-from owegoapi.models import Category
+from owegoapi.models import Category, Owegouser
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 
 class CategoryView(ViewSet):
@@ -82,8 +84,6 @@ class CategoryView(ViewSet):
         Returns:
             Response -- 200, 404, or 500 status code
         """
-        if not request.auth.user.is_staff:
-            return Response({}, status=status.HTTP_403_FORBIDDEN)
 # this makes it so that we can only delete if we are admin/authorized
         try:
             category = Category.objects.get(pk=pk)
@@ -107,3 +107,17 @@ class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = ('id', 'label')
+        
+class CategoryUserSerializer(serializers.ModelSerializer):
+    """JSON serializer for event organizer's related Django user"""
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'email']
+        
+class CategoryOwegoUserSerializer(serializers.ModelSerializer):
+    """JSON serializer for event organizer"""
+    user = CategoryUserSerializer(many=False)
+
+    class Meta:
+        model = Owegouser
+        fields = ['user']

@@ -24,7 +24,7 @@ from owegoapi.views import (
     BillView,
     NoteView,
     CategoryView,
-    TagView
+    TagView,
 )
 
 router = routers.DefaultRouter(trailing_slash=False)
@@ -32,6 +32,7 @@ router.register(r'bills', BillView,'bill')
 router.register(r'notes', NoteView, 'note')
 router.register(r'categories', CategoryView, 'category')
 router.register(r'tags', TagView, 'tag')
+
 
 urlpatterns = [
     path('', include(router.urls)),

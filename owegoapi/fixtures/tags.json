@@ -5,5 +5,12 @@
     "fields":{
         "label": "credit cards"
     }
+},
+{
+    "model": "owegoapi.tag",
+    "pk": 2,
+    "fields":{
+        "label": "car"
+    }
 }
 ]

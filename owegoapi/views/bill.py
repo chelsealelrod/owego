@@ -6,7 +6,7 @@ from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers
 from rest_framework import status
-from owegoapi.models import Bill, Category, Owegouser
+from owegoapi.models import Bill, Category, Owegouser, Tag, BillTag
 from django.contrib.auth import get_user_model
 User = get_user_model()
 
@@ -25,7 +25,7 @@ class BillView(ViewSet):
         # Support filtering bills by type
         #    http://localhost:8000/bills?type=1
         #
-        # That URL will retrieve all tabletop games
+        
         bill_type = self.request.query_params.get('type', None)
         if bill_type is not None:
             bills = bills.filter(bill_type__id=bill_type)
@@ -60,22 +60,23 @@ class BillView(ViewSet):
 
         # Uses the token passed in the `Authorization` header
         owegouser = Owegouser.objects.get(user=request.auth.user)
+        category = Category.objects.get(pk=request.data["categoryId"])
+        # bill_tag = Tag.objects.get(pk=request.data["billTagId"])
         # Create a new Python instance of the Post class
         # and set its properties from what was sent in the
         # body of the request from the client.
         bill = Bill()
         bill.owegouser = owegouser
         bill.title = request.data["title"]
-        category = request.data["categoryId"]
+        bill.category = category
         bill.due_date = request.data["dueDate"]
         bill.amount_due = request.data["amountDue"]
         bill.paid = request.data["paid"]
-    
-        category = Category.objects.get(pk=request.data["categoryId"])
-        bill.category = category
-
+        
+        
         try:
             bill.save()
+            # bill.bill_tag.add(bill_tag)
             serializer = BillSerializer(bill, context={'request': request})
             return Response(serializer.data)
 
@@ -97,14 +98,12 @@ class BillView(ViewSet):
         bill = Bill.objects.get(pk=pk)
         bill.owegouser = owegouser
         bill.title = request.data["title"]
-        bill.category = request.data["categoryId"]
         bill.due_date = request.data["dueDate"]
         bill.amount_due = request.data["amountDue"]
-        bill.paid = False
+        bill.paid = request.data["paid"]
         
         category = Category.objects.get(pk=request.data["categoryId"])
         bill.category = category
-        
         bill.save()
 
         # 204 status code means everything worked but the
@@ -129,16 +128,24 @@ class BillView(ViewSet):
         except Exception as ex:
             return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-class BillSerializer(serializers.ModelSerializer):
-    """JSON serializer for posts
-
-    Arguments:
-        serializer type
-    """
+        
+class TagSerializer(serializers.ModelSerializer):
     class Meta:
+        model = Tag
+        fields = ('id', 'label')
+        
+class BillTagSerializer(serializers.ModelSerializer):
+    tag = TagSerializer(many=False)
+    class Meta:
+        model = Tag
+        fields = ('id', 'tag')
+   
+class BillSerializer(serializers.ModelSerializer):
+     bill_tag = BillTagSerializer(many=True)
+     class Meta:
         model = Bill
         fields = ('id','title', 'due_date', 'amount_due',
-                  'category', 'owegouser', 'paid')
+                  'category', 'owegouser', 'paid', 'bill_tag','notes')
         depth = 1
         
 class BillUserSerializer(serializers.ModelSerializer):

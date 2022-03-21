@@ -7,7 +7,9 @@ from rest_framework import status
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers
-from owegoapi.models import Tag
+from owegoapi.models import Tag, Owegouser, Bill
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 
 class TagView(ViewSet):
@@ -37,8 +39,8 @@ class TagView(ViewSet):
             Response -- JSON serialized tag
         """
         try:
-            tag_type = Tag.objects.get(pk=pk)
-            serializer = TagSerializer(tag_type, context={'request': request})
+            tag = Tag.objects.get(pk=pk)
+            serializer = TagSerializer(tag, context={'request': request})
             return Response(serializer.data)
         except Exception as ex:
             return HttpResponseServerError(ex)
@@ -48,13 +50,16 @@ class TagView(ViewSet):
         Returns:
             Response -- JSON serialized list of categories
         """
-        tag_types = Tag.objects.all()
+        tags = Tag.objects.all()
+        
+        # bill = self.request.query_params.get('bill_id', None)
+        # tags = tags.filter(bill__id=bill)
 
         # Note the addtional `many=True` argument to the
         # serializer. It's needed when you are serializing
         # a list of objects instead of a single object.
         serializer = TagSerializer(
-            tag_types, many=True, context={'request': request})
+            tags, many=True, context={'request': request})
         return Response(serializer.data)
     
     def update(self, request, pk=None):
@@ -98,3 +103,17 @@ class TagSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tag
         fields = ('id', 'label')
+        
+class TagUserSerializer(serializers.ModelSerializer):
+    """JSON serializer for event organizer's related Django user"""
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'email']
+        
+class TagOwegoUserSerializer(serializers.ModelSerializer):
+    """JSON serializer for event organizer"""
+    user = TagUserSerializer(many=False)
+
+    class Meta:
+        model = Owegouser
+        fields = ['user']

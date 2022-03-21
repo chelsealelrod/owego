@@ -1,9 +1,11 @@
 from django.db import models
 from .category import Category
 from django.db.models.deletion import CASCADE
+from .billTag import BillTag
 
 
-class Bill (models.Model):
+
+class Bill(models.Model):
     owegouser = models.ForeignKey("owegoapi.owegouser",
             on_delete=models.CASCADE, null=True)
     title = models.CharField(max_length=50)
@@ -12,4 +14,14 @@ class Bill (models.Model):
     due_date = models.DateField()
     amount_due = models.CharField(max_length=50)
     paid = models.BooleanField(default=False)
+    bill_tag = models.ManyToManyField(BillTag, related_name="tags")
     
+    
+# @property
+# def is_paid(self):
+#      return self.__is_paid
+
+# @is_paid.setter
+# def is_paid(self, value):
+#      self.__is_paid = value
+        
