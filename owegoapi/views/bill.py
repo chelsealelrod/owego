@@ -6,7 +6,7 @@ from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers
 from rest_framework import status
-from owegoapi.models import Bill, Category, Owegouser, Tag
+from owegoapi.models import Bill, Category, Owegouser, Tag, BillTag
 from django.contrib.auth import get_user_model
 User = get_user_model()
 
@@ -25,7 +25,7 @@ class BillView(ViewSet):
         # Support filtering bills by type
         #    http://localhost:8000/bills?type=1
         #
-        # That URL will retrieve all tabletop games
+        
         bill_type = self.request.query_params.get('type', None)
         if bill_type is not None:
             bills = bills.filter(bill_type__id=bill_type)
@@ -61,6 +61,7 @@ class BillView(ViewSet):
         # Uses the token passed in the `Authorization` header
         owegouser = Owegouser.objects.get(user=request.auth.user)
         category = Category.objects.get(pk=request.data["categoryId"])
+        # bill_tag = Tag.objects.get(pk=request.data["billTagId"])
         # Create a new Python instance of the Post class
         # and set its properties from what was sent in the
         # body of the request from the client.
@@ -71,11 +72,11 @@ class BillView(ViewSet):
         bill.due_date = request.data["dueDate"]
         bill.amount_due = request.data["amountDue"]
         bill.paid = request.data["paid"]
-        bill_tag = Tag.objects.get(pk=request.data["billTagId"])
+        
         
         try:
             bill.save()
-            bill.bill_tag.add(bill_tag)
+            # bill.bill_tag.add(bill_tag)
             serializer = BillSerializer(bill, context={'request': request})
             return Response(serializer.data)
 
