@@ -15,13 +15,4 @@ class Bill(models.Model):
     amount_due = models.CharField(max_length=50)
     paid = models.BooleanField(default=False)
     bill_tag = models.ManyToManyField(BillTag, related_name="tags")
-    
-    
-# @property
-# def is_paid(self):
-#      return self.__is_paid
-
-# @is_paid.setter
-# def is_paid(self, value):
-#      self.__is_paid = value
         
