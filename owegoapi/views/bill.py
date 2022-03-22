@@ -25,7 +25,6 @@ class BillView(ViewSet):
         # Support filtering bills by type
         #    http://localhost:8000/bills?type=1
         #
-        
         bill_type = self.request.query_params.get('type', None)
         if bill_type is not None:
             bills = bills.filter(bill_type__id=bill_type)
@@ -57,7 +56,7 @@ class BillView(ViewSet):
         Returns:
             Response -- JSON serialized a post instance
         """
-
+        
         # Uses the token passed in the `Authorization` header
         owegouser = Owegouser.objects.get(user=request.auth.user)
         category = Category.objects.get(pk=request.data["categoryId"])

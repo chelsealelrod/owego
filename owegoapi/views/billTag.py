@@ -43,9 +43,9 @@ class TagSerializer(serializers.ModelSerializer):
     
 class BillTagSerializer(serializers.ModelSerializer):
     """
-    JSON Serialzer
-
-    
+    JSON Serialzer for BillTags
+    Arguments:
+        serializers
     """
     tag = TagSerializer(many=False)
     class Meta:
