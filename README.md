@@ -27,6 +27,9 @@ CSS for Styling.
 <img width="1394" alt="ScreenShot2capstone2 " src="https://user-images.githubusercontent.com/79339383/159969178-ca80823c-9898-47f9-a46f-89714b4b4e4f.png">
 
 
+<img width="1436" alt="ScreenShot3capstone2" src="https://user-images.githubusercontent.com/79339383/159971077-0db0cfe7-6081-4b91-bbac-d6451075d9f5.png">
+
+
 
 
 
