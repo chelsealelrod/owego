@@ -19,7 +19,14 @@ CSS for Styling.
 <img width="1434" alt="ScreenShot7capstone2" src="https://user-images.githubusercontent.com/79339383/159968647-c31d5d23-9c0e-4a82-a842-ea83b7df3cf5.png">
 
 
+<img width="1303" alt="ScreenShot8capstone2" src="https://user-images.githubusercontent.com/79339383/159970301-efb246ea-1982-4787-8ca4-498dcb5b6e15.png">
+
+
 <img width="1394" alt="ScreenShot2capstone2 " src="https://user-images.githubusercontent.com/79339383/159969178-ca80823c-9898-47f9-a46f-89714b4b4e4f.png">
+
+
+<img width="1356" alt="ScreenShot5capstone2" src="https://user-images.githubusercontent.com/79339383/159969805-ef09cd5f-97cf-4a61-96d2-35785852e8ff.png">
+
 
 
 
