@@ -16,3 +16,5 @@ CSS for Styling.
 
 
 ![Screenshot](screenshot.png)
+
+<img width="1434" alt="ScreenShot7capstone2" src="https://user-images.githubusercontent.com/79339383/159968647-c31d5d23-9c0e-4a82-a842-ea83b7df3cf5.png">
