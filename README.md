@@ -15,6 +15,11 @@ I created this application using Python, Django as well as Javascript and React.
 CSS for Styling.
 
 
-![Screenshot](screenshot.png)
 
 <img width="1434" alt="ScreenShot7capstone2" src="https://user-images.githubusercontent.com/79339383/159968647-c31d5d23-9c0e-4a82-a842-ea83b7df3cf5.png">
+
+
+<img width="1394" alt="ScreenShot2capstone2 " src="https://user-images.githubusercontent.com/79339383/159969178-ca80823c-9898-47f9-a46f-89714b4b4e4f.png">
+
+
+
