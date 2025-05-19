@@ -5,11 +5,11 @@
 
 ### Motivation
 
-I wanted to create an application that helps those, including myself, who have trouble keeping up with their due dates of monthly bills. This app
-does not require any banking info and is solely just for keeping track of the dates, amounts, and status of being paid.
-Some people have their bills automatically taken out each month, and others may pay it manually every month. In the app, a user can check the
-status of paid or unpaid by creating all your bills that you want to view and check on. Click "Create Bill" to add the bills you want to keep track of. The user has the option to add related notes to each bill as well as create categories and tags for each one. Organizing and keeping track of current bills eases the mind and saves the hassle of looking them up in indvidual
-apps or bank statements.
+Owe-Go was created to help individuals - myself included - who struggle to keep track of monthly bill due dates. This app isn't tied to any banking info; it's simply designed to organize bill details like due dates, amounts, and payment status.
+
+Some users have their bills set to auto-pay, while others handle payments manually each month. With Owe-Go, users can easily create and manage a list of bills, check whether they're paid or unpaid, and categorize or tag them for better organization. Notes can also be added to individual bills for extra content.
+
+By simplifying how bills are tracked and viewed, Owe-Go helps reduce the mental clutter and time spent digging through apps or bank statements.
 
 
 ### Planning
